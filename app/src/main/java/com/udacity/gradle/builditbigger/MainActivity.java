@@ -1,6 +1,7 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.libraryjokesandroid.AndroidLibraryMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         mProgressBar.setVisibility(View.VISIBLE);
-        mRootFragmentHolder.setAlpha((float) 0.4);
         new EndpointsAsyncTask().execute(this);
     }
 
@@ -115,9 +116,16 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(s);
             // Pass Data for display
             mProgressBar.setVisibility(View.INVISIBLE);
-            mRootFragmentHolder.setAlpha(1);
+            passDataAndroidLibrary(s);
             Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    void passDataAndroidLibrary(String joke){
+        Intent intent = new Intent(this, AndroidLibraryMain.class);
+        intent.putExtra("JOKE_EXTRA", joke);
+        startActivity(intent);
     }
 }
 
