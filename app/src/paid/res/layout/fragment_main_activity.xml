@@ -23,30 +23,18 @@
         android:onClick="tellJoke"
         android:text="@string/button_text_paid" />
 
-    <FrameLayout
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/root_card_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8">
 
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/root_card_view"
+        <TextView
+            android:id="@+id/show_joke_text_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/show_joke_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAlignment="center" />
-        </android.support.v7.widget.CardView>
-
-        <ProgressBar
-            android:id="@+id/loading_pb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center" />
+    </android.support.v7.widget.CardView>
 </LinearLayout>
