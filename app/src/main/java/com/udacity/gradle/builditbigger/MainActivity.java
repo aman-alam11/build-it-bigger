@@ -1,22 +1,20 @@
 package com.udacity.gradle.builditbigger;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.libraryjokesandroid.AndroidLibraryMain;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -31,16 +29,15 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout mRootFragmentHolder;
     private static MyApi myApiService = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = findViewById(R.id.loading_pb);
         mRootFragmentHolder = findViewById(R.id.fragment);
-
         MainActivityFragment mainActivityFragment = new MainActivityFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, mainActivityFragment).commit();
+
     }
 
 
@@ -75,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Async task to get jokes
      */
+    @SuppressLint("StaticFieldLeak")
     class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
 
@@ -99,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 myApiService = builder.build();
             }
 
-            Context context = params[0];
-
+//            Context context = params[0];
             try {
 
                 return myApiService.getJokesMethod().execute().getData();
@@ -112,20 +109,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(String joke) {
+            super.onPostExecute(joke);
             // Pass Data for display
             mProgressBar.setVisibility(View.INVISIBLE);
-            passDataAndroidLibrary(s);
-            Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+            passDataAndroidLibrary(joke);
         }
     }
 
 
-    void passDataAndroidLibrary(String joke){
+    void passDataAndroidLibrary(String joke) {
         Intent intent = new Intent(this, AndroidLibraryMain.class);
         intent.putExtra("JOKE_EXTRA", joke);
         startActivity(intent);
     }
+
 }
 

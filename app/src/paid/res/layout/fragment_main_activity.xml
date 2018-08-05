@@ -1,40 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivityFragment">
 
     <TextView
+        android:layout_alignParentTop="true"
         android:id="@+id/instructions_text_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:textSize="30sp"
+        android:layout_height="150dp"
         android:gravity="center"
         android:text="@string/instructions"
         android:textAlignment="center" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textSize="30sp"
+        android:layout_gravity="bottom"
         android:onClick="tellJoke"
         android:text="@string/button_text_paid" />
-
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/root_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8">
-
-        <TextView
-            android:id="@+id/show_joke_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textAlignment="center" />
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+</RelativeLayout>
