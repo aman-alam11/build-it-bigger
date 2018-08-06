@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.libraryjokesandroid.AndroidLibraryMain;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -24,20 +26,21 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity {
-    ProgressBar mProgressBar;
-    FrameLayout mRootFragmentHolder;
-    private static MyApi myApiService = null;
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.JokeInterface {
+    //    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar = findViewById(R.id.loading_pb);
-        mRootFragmentHolder = findViewById(R.id.fragment);
+//        mProgressBar = findViewById(R.id.loading_pb);
+//        FrameLayout mRootFragmentHolder = findViewById(R.id.fragment);
+        addFragment();
+    }
+
+    public void addFragment() {
         MainActivityFragment mainActivityFragment = new MainActivityFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, mainActivityFragment).commit();
-
     }
 
 
@@ -64,61 +67,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        mProgressBar.setVisibility(View.VISIBLE);
-        new EndpointsAsyncTask().execute(this);
+//        mProgressBar.setVisibility(View.VISIBLE);
+        startAsyncTask();
     }
 
+    public void startAsyncTask() {
+        if (NetworkConnectivityChecker.isInternetConnectivityAvailable(MainActivity.this)) {
+            new EndpointsAsyncTask(MainActivity.this).execute(this);
+        } else {
+            noInternetToast();
+        }
+    }
 
     /**
-     * Async task to get jokes
+     * Send a Toast in case internet is not available
      */
-    @SuppressLint("StaticFieldLeak")
-    class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
-
-
-        @Override
-        protected String doInBackground(Context... params) {
-            if (myApiService == null) {  // Only do this once
-                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                        new AndroidJsonFactory(), null)
-                        // options for running against local devappserver
-                        // - 10.0.2.2 is localhost's IP address in Android emulator
-                        // - turn off compression when running against local devappserver
-                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                            @Override
-                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
-                                    throws IOException {
-                                abstractGoogleClientRequest.setDisableGZipContent(true);
-                            }
-                        });
-                // end options for devappserver
-
-                myApiService = builder.build();
-            }
-
-//            Context context = params[0];
-            try {
-
-                return myApiService.getJokesMethod().execute().getData();
-            } catch (IOException e) {
-                Log.e("Error", e.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String joke) {
-            super.onPostExecute(joke);
-            // Pass Data for display
-            mProgressBar.setVisibility(View.INVISIBLE);
-            passDataAndroidLibrary(joke);
-        }
+    private void noInternetToast() {
+        Toast.makeText(MainActivity.this,
+                getResources().getString(R.string.no_internet_error),
+                Toast.LENGTH_LONG).show();
     }
 
-
-    void passDataAndroidLibrary(String joke) {
+    @Override
+    public void transferJoke(String joke) {
+        if (joke == null || TextUtils.isEmpty(joke)) {
+            noInternetToast();
+            return;
+        }
         Intent intent = new Intent(this, AndroidLibraryMain.class);
         intent.putExtra("JOKE_EXTRA", joke);
         startActivity(intent);

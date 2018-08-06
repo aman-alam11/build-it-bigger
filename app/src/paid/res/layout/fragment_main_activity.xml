@@ -6,21 +6,22 @@
     tools:context=".MainActivityFragment">
 
     <TextView
-        android:layout_alignParentTop="true"
         android:id="@+id/instructions_text_view"
         android:layout_width="match_parent"
-        android:textSize="30sp"
         android:layout_height="150dp"
+        android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="@string/instructions"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="30sp" />
 
     <Button
-        android:layout_alignParentBottom="true"
+        android:id="@+id/get_joke_button"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:textSize="30sp"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:onClick="tellJoke"
-        android:text="@string/button_text_paid" />
+        android:text="@string/button_text_paid"
+        android:textSize="30sp" />
 </RelativeLayout>
